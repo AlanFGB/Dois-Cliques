@@ -15,6 +15,7 @@ import {
  * PROJETO: Dois Cliques
  * LICENÇA: MIT
  * FOCO: Segurança, Sustentabilidade e Qualidade.
+ * * Este ficheiro serve como o componente principal (App) para a sua aplicação.
  */
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
   const [ecoMode, setEcoMode] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
 
+  // Lógica de contagem decrescente para o alerta de emergência
   useEffect(() => {
     let interval;
     if (stage === 'alerting' && timer > 0) {
@@ -33,6 +35,7 @@ const App = () => {
     return () => clearInterval(interval);
   }, [stage, timer]);
 
+  // Definição da paleta de cores baseada no Modo Eco (Sustentabilidade)
   const colors = {
     bg: ecoMode ? 'bg-slate-950' : 'bg-white',
     text: ecoMode ? 'text-slate-50' : 'text-slate-900',
@@ -41,6 +44,7 @@ const App = () => {
     card: ecoMode ? 'bg-slate-900 border-slate-800' : 'bg-slate-50 border-slate-200'
   };
 
+  // Ecrã de Alerta Ativo (Contagem Decrescente)
   if (stage === 'alerting') {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-emerald-900 text-white p-6 text-center animate-in fade-in duration-300">
@@ -59,6 +63,7 @@ const App = () => {
 
   return (
     <div className={`flex flex-col h-[750px] max-w-md mx-auto overflow-hidden shadow-2xl transition-colors duration-500 ${colors.bg}`}>
+      {/* Barra de Ferramentas Superior */}
       <div className="p-6 flex justify-between items-center z-10">
         <div className="flex items-center space-x-2">
           <Leaf className="text-emerald-500" size={18} />
@@ -69,11 +74,13 @@ const App = () => {
         <button 
           onClick={() => setEcoMode(!ecoMode)}
           className={`p-2 rounded-full transition-colors ${ecoMode ? 'bg-slate-800' : 'bg-slate-100'}`}
+          title="Alternar Modo Eco"
         >
           {ecoMode ? <Zap size={20} className="text-yellow-400" /> : <Moon size={20} className="text-slate-600" />}
         </button>
       </div>
 
+      {/* Estado Inicial: Ecrã Principal */}
       {stage === 'home' && (
         <div className="flex-1 flex flex-col items-center justify-around p-6 animate-in slide-in-from-bottom-4 duration-500">
           <div className="text-center">
@@ -103,22 +110,23 @@ const App = () => {
         </div>
       )}
 
+      {/* Estado: Emergência Ativa */}
       {stage === 'active' && (
         <div className="flex-1 flex flex-col p-6 space-y-6 animate-in fade-in duration-500">
           <div className={`p-8 rounded-[2.5rem] border flex flex-col items-center text-center shadow-lg ${colors.card}`}>
             <CheckCircle2 size={40} className="text-emerald-500 mb-4" />
             <h3 className={`text-2xl font-bold mb-2 ${colors.text}`}>Alerta Enviado</h3>
             <p className={`text-sm opacity-60 ${colors.text}`}>
-              Sua posição foi enviada. Dispositivos próximos foram mapeados para apoiar a investigação.
+              A sua posição foi enviada. Dispositivos próximos foram mapeados para apoiar a investigação.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button onClick={() => setStage('reporting')} className={`flex flex-col items-center p-6 rounded-3xl border ${colors.card}`}>
+            <button onClick={() => setStage('reporting')} className={`flex flex-col items-center p-6 rounded-3xl border transition-all active:scale-95 ${colors.card}`}>
               <Mic size={32} className="text-emerald-500 mb-2" />
               <span className={`text-xs font-bold uppercase ${colors.text}`}>Relato Áudio</span>
             </button>
-            <button onClick={() => setStage('reporting')} className={`flex flex-col items-center p-6 rounded-3xl border ${colors.card}`}>
+            <button onClick={() => setStage('reporting')} className={`flex flex-col items-center p-6 rounded-3xl border transition-all active:scale-95 ${colors.card}`}>
               <MessageSquare size={32} className="text-emerald-500 mb-2" />
               <span className={`text-xs font-bold uppercase ${colors.text}`}>Relato Texto</span>
             </button>
@@ -130,14 +138,15 @@ const App = () => {
         </div>
       )}
 
+      {/* Estado: Envio de Evidências */}
       {stage === 'reporting' && (
         <div className="flex-1 flex flex-col p-6 space-y-6 animate-in slide-in-from-right duration-300">
           <h2 className={`text-xl font-black uppercase ${colors.text}`}>Evidências</h2>
           <textarea 
             placeholder="Descreva o ocorrido..."
-            className={`w-full h-40 p-5 rounded-3xl border-none outline-none resize-none ${ecoMode ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'}`}
+            className={`w-full h-40 p-5 rounded-3xl border-none outline-none resize-none transition-all ${ecoMode ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-900'}`}
           />
-          <div className={`p-10 rounded-[2.5rem] flex flex-col items-center border-2 border-dashed ${isRecording ? 'border-red-500' : 'border-emerald-500/20'}`}>
+          <div className={`p-10 rounded-[2.5rem] flex flex-col items-center border-2 border-dashed transition-colors ${isRecording ? 'border-red-500' : 'border-emerald-500/20'}`}>
             <button 
               onMouseDown={() => setIsRecording(true)}
               onMouseUp={() => setIsRecording(false)}
@@ -149,12 +158,13 @@ const App = () => {
               {isRecording ? 'Gravando...' : 'Segure para Gravar'}
             </p>
           </div>
-          <button onClick={() => setStage('active')} className="w-full py-5 bg-emerald-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest mt-auto">
+          <button onClick={() => setStage('active')} className="w-full py-5 bg-emerald-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest mt-auto shadow-lg active:scale-95 transition-transform">
             Enviar Relatório
           </button>
         </div>
       )}
 
+      {/* Indicador de Rodapé */}
       <div className="p-2 flex justify-center">
         <div className="w-32 h-1.5 bg-slate-800 rounded-full opacity-20"></div>
       </div>
